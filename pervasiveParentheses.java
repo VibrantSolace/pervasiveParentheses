@@ -22,17 +22,19 @@ public class pervasiveParentheses {
         while (i+1<ex.length()) {
             try {
                 evaluated += Integer.parseInt(ex.substring(i,i+1));
-            } catch (NumberFormatException) {
+            } catch (Exception NumberFormatException) {
                 return "error";
             }
             i += 1;
         }
+        return evaluated;
     }
 
     public static void main(String[] args) {
         System.out.print(findP("(123)"));
     }
 }
+
 
 
 
