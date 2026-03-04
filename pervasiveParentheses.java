@@ -8,8 +8,8 @@ public class pervasiveParentheses {
         } else if (i == -1 && s.indexOf("(") != -1) {
             return "error";
         } else {
-            while (search != "(") {
-                search = s.substring(index - 1, index);
+            while (!search.equals("(")) {
+                search = s.substring(i - 1, i);
                 i -= 1;
             }
             return s.substring(i+1, index);
@@ -20,4 +20,5 @@ public class pervasiveParentheses {
         System.out.print(findP("(123)"));
     }
 }
+
 
