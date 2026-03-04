@@ -20,9 +20,9 @@ public class pervasiveParentheses {
         int i = 0;
         int evaluated = 0;
         while (i+1<ex.length()) {
-            if (ex.substring(i,i+1).isdigit()) {
+            try {
                 evaluated += Integer.parseInt(ex.substring(i,i+1));
-            } else {
+            } catch (NumberFormatException) {
                 return "error";
             }
             i += 1;
@@ -33,6 +33,7 @@ public class pervasiveParentheses {
         System.out.print(findP("(123)"));
     }
 }
+
 
 
 
