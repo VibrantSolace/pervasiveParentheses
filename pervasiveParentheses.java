@@ -16,9 +16,23 @@ public class pervasiveParentheses {
         }
     }
 
+    public static String evalExpression (String ex) {
+        int i = 0;
+        int evaluated = 0;
+        while (i+1<ex.length()) {
+            if (ex.substring(i,i+1).isdigit()) {
+                evaluated += (int)ex.substring(i,i+1)
+            } else {
+                return "error";
+            }
+            i += 1
+        }
+    }
+
     public static void main(String[] args) {
         System.out.print(findP("(123)"));
     }
 }
+
 
 
