@@ -1,5 +1,5 @@
 public class pervasiveParentheses {
-    public static String findP(String s) {
+    public static String loopP(String s) {
         int index = s.indexOf(")");
         if (index == -1) { // safety measures
             if (s.indexOf("(") != -1) {
@@ -59,10 +59,45 @@ public class pervasiveParentheses {
 
         num += Integer.parseInt(before) + Integer.parseInt(after);
         s = s.substring(0, i + 1) + String.valueOf(num) + s.substring(index, s.length());
-        return findP(s);
+        return loopP(s);
+    }
+
+    public static boolean isDigit(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String addString(String s) {
+        int len = 0;
+        String first = "";
+        String second = "";
+
+        while (len != s.length() - 1) {
+            first = s.substring(len, len + 1);
+            if (isDigit(first)) {
+                second = s.substring(len + 1, len + 2);
+                if (isDigit(second)) {
+                    String added = String.valueOf(Integer.parseInt(first) + Integer.parseInt(second));
+                    return addString(s.substring(0, len) + added + s.substring(len + 2));
+                }
+            }
+            len += 1;
+        }
+        return s;
+    }
+
+    public static String findP(String s) {
+        s = addString(s);
+        s = loopP(s);
+        return s;
     }
 
     public static void main(String[] args) {
-        System.out.print(findP("((10(123))(10))"));
+        String num = "((10(123))(10))";
+        System.out.println(findP(num));
     }
 }
