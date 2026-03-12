@@ -1,0 +1,164 @@
+import java.util.Scanner;
+public class pervasiveParenthesesTwo {
+
+    public static String loopP(String s) {
+        while (true) {
+            int index = s.indexOf(")");
+            if (index == -1) { // safety measures
+                if (s.indexOf("(") != -1) {
+                    return "error";
+                } else
+                    return s;
+            }
+            int i = index; // variable to tick down from index to search String
+            String search = ""; // variable to search String one character at a time
+            while (!search.equals("(")) {
+                search = s.substring(i - 1, i);
+                i -= 1;
+                if (i == 0 && !search.equals("(")) {
+                    return "error";
+                }
+            }
+            int num = Integer.parseInt(s.substring(i + 1, index)) * 2; // doubles what's inside parentheses
+            // * this next section of code will search for the Strings
+            // before and after the parentheses in order to add them together
+            // and replace them back in the String */
+            String beforeP = ""; // placeholder variable because it's flipped
+            String before = ""; // String before parentheses
+            search = "";
+            while (!search.equals("(")) {
+                beforeP += search;
+                if (i == 0) {
+                    i--;
+                    break;
+                }
+                search = s.substring(i - 1, i);
+                i -= 1;
+            }
+
+            int len = beforeP.length();
+            while (len != 0) { // reverses the beforeP String
+                before += beforeP.substring(len - 1, len);
+                len -= 1;
+            }
+
+            String after = ""; // don't need a placeholder for this one
+            search = "";
+            while (!search.equals("(") && !search.equals(")")) {
+                after += search;
+                index += 1;
+                if (index == s.length()) {
+                    break;
+                }
+                search = s.substring(index, index + 1);
+            }
+
+            if (before.equals(""))
+                before = "0";
+            if (after.equals(""))
+                after = "0";
+
+            num += Integer.parseInt(before) + Integer.parseInt(after);
+            s = s.substring(0, i + 1) + String.valueOf(num) + s.substring(index, s.length());
+        }
+    }
+
+    public static boolean isDigit(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String addString(String s) {
+        int len = 0;
+        String first = "";
+        String second = "";
+
+        while (len != s.length() - 1) {
+            first = s.substring(len, len + 1);
+            if (isDigit(first)) {
+                second = s.substring(len + 1, len + 2);
+                if (isDigit(second)) {
+                    String added = String.valueOf(Integer.parseInt(first) + Integer.parseInt(second));
+                    s = (s.substring(0, len) + added + s.substring(len + 2));
+                }
+            }
+            len += 1;
+        }
+        return s;
+    }
+
+    public static String evaluateEquation(String s) {
+        int iter = 0;
+        String index = "";
+        while (iter != s.length()) {
+            index = s.substring(iter, iter + 1);
+            if (!isDigit(index) && !index.equals("(") && !index.equals(")")) {
+                return "error";
+            }
+            iter += 1;
+        }
+        s = addString(s);
+        s = loopP(s);
+        return s;
+    }
+    public static String constructEquation(int s) {
+        int left = s;
+        int parens = 0;
+        int curVal = 0;
+        //final string, permanent
+
+        String a = "";
+        while (left != 0) {
+            curVal = left;
+            parens = 0;
+            while  (curVal >= 10) {
+                curVal /= 2;
+                parens += 1;
+            }
+            left -= curVal*Math.pow(2,parens);
+            a += "(".repeat(parens)+Integer.toString(curVal)+")".repeat(parens);
+        }
+        return a;
+    }
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner (System.in);
+        while (true) {
+            System.out.println("e {expression} evaluates, g {number} generates, q quits. Don't add spaces before, and always add a space before your expression.");
+            String input = scan.nextLine();
+            if (input.length()<2) {
+                System.out.println("You didn't input anything!");
+            } else if (input.substring(0,1).equals("e")) {
+                if (input.substring(1,2).equals(" ")) {
+                    if (evaluateEquation(input.substring(2)) != "error") {
+                        System.out.println("The value of " + input.substring(2) + " is " + evaluateEquation(input.substring(2))) ;
+                    } else {
+                        System.out.println("That's not a valid equation!");
+                    }
+                } else {
+                    System.out.println("I told you to add a space before the expression!");
+                }
+            } else if (input.substring(0,1).equals("g")) {
+                if (input.substring(1,2).equals(" ")) {
+                    if (isDigit(input.substring(2))) {
+                        System.out.println("An expression with value " + input.substring(2) + " is " + constructEquation(Integer.parseInt(input.substring(2)))) ;
+                    } else {
+                        System.out.println("That's not a valid number!");
+                    }
+                } else {
+                    System.out.println("I told you to add a space before the expression!");
+                }
+            } else if (input.substring(0,1).equals("q")) {
+                System.out.println("Bye!");
+                break;
+            } else {
+                System.out.println("Invalid input!");
+            }
+        }
+    }
+}
+
