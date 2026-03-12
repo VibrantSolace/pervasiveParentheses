@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class pervasiveParentheses {
     public static String loopP(String s) {
         while (true) {
@@ -84,7 +86,6 @@ public class pervasiveParentheses {
                 if (isDigit(second)) {
                     String added = String.valueOf(Integer.parseInt(first) + Integer.parseInt(second));
                     s = (s.substring(0, len) + added + s.substring(len + 2));
-                    len = 0;
                 }
             }
             len += 1;
@@ -107,19 +108,62 @@ public class pervasiveParentheses {
         return s;
     }
 
-    public static int getBase(String s) {
-        return 0;
-    }
-
     public static String generate(String s) {
         if (!isDigit(s)) {
             return "Please input a number";
         }
-        return "";
+        String newString = "";
+        int goal = Integer.parseInt(s);
+        int currentNum = 0;
+        while (currentNum != goal) {
+            int i = 0;
+            int num = goal - currentNum;
+            while (num >= 10) {
+                num /= 2;
+                i += 1;
+            }
+            currentNum += num * ((int) Math.pow(2, i));
+            int parens = i;
+            while (parens != 0) {
+                newString += "(";
+                parens -= 1;
+            }
+            newString += num;
+            parens = i;
+            while (parens != 0) {
+                newString += ")";
+                parens -= 1;
+            }
+        }
+        return newString;
     }
 
+    static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        String num = "((10(123))(10))";
+        System.out.println(
+                "Command guidebook:" +
+                        "\n * e to evaluate an expression" +
+                        "\n * g to generate an expression" +
+                        "\n * s to shorten an expression" +
+                        "\n * q quits the program" +
+                        "\n Example: g 15 generates an expression with value 15" +
+                        "\nInput a Command:");
+        String num = "(99)";
+        String command = scanner.nextLine();
+        String key = command.substring(0, 1);
+        String expression = command.substring(2);
         System.out.println(num + " = " + findP(num));
+        System.out.println(generate(command));
+        if (key.equals("e")) {
+
+        }
+        else if (key.equals("g")) {
+
+        }
+        else if (key.equals("s")) {
+
+        }
+
     }
 }
