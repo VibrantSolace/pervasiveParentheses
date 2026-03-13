@@ -174,7 +174,7 @@ public class pervasiveParentheses {
             String command = scanner.nextLine();
             String key = "";
             String expression = "";
-            if (command.length() < 3) {
+            if (command.length() < 3 && command.substring(0,1) != "q") {
                 key = "ERROR";
             } else {
                 key = command.substring(0, 1);
