@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class pervasiveParentheses {
-    public static String loopP(String s) {
+    public static String loop(String s) {
         while (true) {
             int index = s.indexOf(")");
             if (index == -1) { // safety measures
@@ -74,26 +74,38 @@ public class pervasiveParentheses {
         }
     }
 
-    public static String addString(String s) {
+    public static String addDigits(String s) {
         int len = 0;
         String first = "";
-        String second = "";
+        String next = "";
+        int added = 0;
+        int temp = 0;
 
-        while (len != s.length() - 1) {
+        while (len < s.length() - 1) {
             first = s.substring(len, len + 1);
             if (isDigit(first)) {
-                second = s.substring(len + 1, len + 2);
-                if (isDigit(second)) {
-                    String added = String.valueOf(Integer.parseInt(first) + Integer.parseInt(second));
-                    s = (s.substring(0, len) + added + s.substring(len + 2));
+                temp = len;
+                added = Integer.parseInt(first);
+                while (temp < s.length() - 1 && isDigit(s.substring(temp + 1, temp + 2))) {
+                    next = s.substring(temp + 1, temp + 2);
+                    added = added + Integer.parseInt(next);
+                    temp += 1;
                 }
+                String after = "";
+                if (temp + 1 == s.length())
+                    after = "";
+                else {
+                    after = s.substring(temp + 1);
+                }
+                s = (s.substring(0, len) + added + after);
+                len = temp;
             }
             len += 1;
         }
         return s;
     }
 
-    public static String findP(String s) {
+    public static String evaluate(String s) {
         int iter = 0;
         String index = "";
         while (iter != s.length()) {
@@ -103,8 +115,8 @@ public class pervasiveParentheses {
             }
             iter += 1;
         }
-        s = addString(s);
-        s = loopP(s);
+        s = addDigits(s);
+        s = loop(s);
         return s;
     }
 
@@ -141,29 +153,39 @@ public class pervasiveParentheses {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.println(
-                "Command guidebook:" +
-                        "\n * e to evaluate an expression" +
-                        "\n * g to generate an expression" +
-                        "\n * s to shorten an expression" +
-                        "\n * q quits the program" +
-                        "\n Example: g 15 generates an expression with value 15" +
-                        "\nInput a Command:");
-        String num = "(99)";
-        String command = scanner.nextLine();
-        String key = command.substring(0, 1);
-        String expression = command.substring(2);
-        System.out.println(num + " = " + findP(num));
-        System.out.println(generate(command));
-        if (key.equals("e")) {
+        while (true) {
+            System.out.println(
+                    "Command guidebook:" +
+                            "\n * e to evaluate an expression" +
+                            "\n * g to generate an expression" +
+                            "\n * s to shorten an expression" +
+                            "\n * q quits the program" +
+                            "\n Example: g 15 generates an expression with value 15" +
+                            "\n Input a Command:");
+            String command = scanner.nextLine();
+            String key = "";
+            String expression = "";
+            if (command.length() < 3) {
+                key = "ERROR";
+            } else {
+                key = command.substring(0, 1);
+                expression = command.substring(2);
+            }
 
+            if (key.equals("ERROR")) {
+                System.out.println("Please input a valid command");
+            } else if (key.equals("e")) {
+                System.out.println(evaluate(expression));
+            } else if (key.equals("g")) {
+                System.out.println(generate(expression));
+            } else if (key.equals("s")) {
+                expression = evaluate(expression);
+                System.out.println(generate(expression));
+            } else if (key.equals("q")) {
+                System.out.println("Bye!");
+                break;
+            }
+            System.out.println("\n\n");
         }
-        else if (key.equals("g")) {
-
-        }
-        else if (key.equals("s")) {
-
-        }
-
     }
 }
