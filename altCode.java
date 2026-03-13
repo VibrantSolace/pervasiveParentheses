@@ -125,28 +125,37 @@ public class pervasiveParentheses {
             return "Please input a number";
         }
         String newString = "";
+        String front = "";
         int goal = Integer.parseInt(s);
         int currentNum = 0;
+
+        int i = 0;
+        int num = goal;
+        while (num >= 10) {
+            num /= 2;
+            i += 1;
+        }
+        currentNum += num * ((int) Math.pow(2, i));
+        newString += num;
+        while (i != 0) {
+            newString = "(" + newString + ")";
+            i -= 1;
+        }
         while (currentNum != goal) {
-            int i = 0;
-            int num = goal - currentNum;
+            num = goal - currentNum;
+            i = 0;
             while (num >= 10) {
                 num /= 2;
                 i += 1;
             }
             currentNum += num * ((int) Math.pow(2, i));
-            int parens = i;
-            while (parens != 0) {
-                newString += "(";
-                parens -= 1;
-            }
-            newString += num;
-            parens = i;
-            while (parens != 0) {
-                newString += ")";
-                parens -= 1;
-            }
+            if (i == 0)
+                front = "";
+            else
+                front = newString.substring(0, i);
+            newString = front + num + newString.substring(i + 1);
         }
+
         return newString;
     }
 
