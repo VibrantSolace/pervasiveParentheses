@@ -177,8 +177,7 @@ public class pervasiveParentheses {
             if (command.substring(0, 1).equals("q")) {
                 System.out.println("Bye!");
                 break;
-            }
-            if (command.length() < 3) {
+            } else if (command.length() < 3) {
                 key = "ERROR";
             } else {
                 key = command.substring(0, 1);
