@@ -174,7 +174,11 @@ public class pervasiveParentheses {
             String command = scanner.nextLine();
             String key = "";
             String expression = "";
-            if (command.length() < 3 && !command.substring(0, 1).equals("q")) {
+            if (command.substring(0, 1).equals("q")) {
+                System.out.println("Bye!");
+                break;
+            }
+            if (command.length() < 3) {
                 key = "ERROR";
             } else {
                 key = command.substring(0, 1);
@@ -190,9 +194,6 @@ public class pervasiveParentheses {
             } else if (key.equals("s")) {
                 expression = evaluate(expression);
                 System.out.println(generate(expression));
-            } else if (key.equals("q")) {
-                System.out.println("Bye!");
-                break;
             }
             System.out.println("\n\n");
         }
