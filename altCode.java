@@ -178,13 +178,13 @@ public class pervasiveParentheses {
                 System.out.println("Bye!");
                 break;
             } else if (command.length() < 3) {
-                key = "ERROR";
+                key = "LENGTH ERROR";
             } else {
                 key = command.substring(0, 1);
                 expression = command.substring(2);
             }
 
-            if (key.equals("ERROR")) {
+            if (key.equals("LENGTH ERROR")) {
                 System.out.println("Please input a valid command");
             } else if (key.equals("e")) {
                 System.out.println(evaluate(expression));
@@ -193,7 +193,8 @@ public class pervasiveParentheses {
             } else if (key.equals("s")) {
                 expression = evaluate(expression);
                 System.out.println(generate(expression));
-            }
+            } else
+                System.out.println("Please input a valid command");
             System.out.println("\n\n");
         }
     }
