@@ -153,7 +153,7 @@ public class pervasiveParentheses {
                 front = "";
             else
                 front = newString.substring(0, i);
-            newString = front + num + newString.substring(i + 1);
+            newString = front + num + newString.substring(i);
         }
 
         return newString;
