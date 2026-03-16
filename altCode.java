@@ -131,12 +131,17 @@ public class pervasiveParentheses {
 
         int i = 0;
         int num = goal;
-        while (num >= 10) {
+        while (num >= 28) {
             num /= 2;
             i += 1;
         }
         currentNum += num * ((int) Math.pow(2, i));
-        newString += num;
+        while (num >= 9) {
+            newString += 9;
+            num -= 9;
+        }
+        if (num != 0)
+            newString += num;
         while (i != 0) {
             newString = "(" + newString + ")";
             i -= 1;
