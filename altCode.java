@@ -131,7 +131,7 @@ public class pervasiveParentheses {
 
         int i = 0;
         int num = goal;
-        while (num >= 28) {
+        while (num >= 37) {
             num /= 2;
             i += 1;
         }
@@ -198,8 +198,11 @@ public class pervasiveParentheses {
             } else if (key.equals("s")) {
                 expression = evaluate(expression);
                 System.out.println(generate(expression));
-            } else
+            } else if (key.equals("t")) { // secret testing option
+                System.out.println("  " + evaluate(generate(expression)));
+            } else {
                 System.out.println("Please input a valid command");
+            }
             System.out.println("\n\n");
         }
     }
