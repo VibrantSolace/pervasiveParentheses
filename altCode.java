@@ -7,7 +7,7 @@ public class pervasiveParentheses {
             if (index == -1) { // safety measures
                 if (s.indexOf("(") != -1) {
                     System.out.println("No matching closed parentheses for your open parentheses");
-                    return "error";
+                    return "-1";
                 } else
                     return s;
             }
@@ -18,7 +18,7 @@ public class pervasiveParentheses {
                 i -= 1;
                 if (i == 0 && !search.equals("(")) {
                     System.out.println("No matching open parentheses for your closed parentheses");
-                    return "error";
+                    return "-1";
                 }
             }
             int num = Integer.parseInt(s.substring(i + 1, index)) * 2; // doubles what's inside parentheses
@@ -105,25 +105,27 @@ public class pervasiveParentheses {
         return s;
     }
 
-    public static String evaluate(String s) {
+    public static boolean validate(String s) {
+        return !(evaluate(s) == -1);
+    }
+
+    public static int evaluate(String s) {
         int iter = 0;
         String index = "";
         while (iter != s.length()) {
             index = s.substring(iter, iter + 1);
             if (!isDigit(index) && !index.equals("(") && !index.equals(")")) {
-                return "Your string does not follow the language rules";
+                return -1;
             }
             iter += 1;
         }
         s = addDigits(s);
-        s = loop(s);
-        return s;
+        int value = Integer.parseInt(loop(s));
+        return value;
     }
 
-    public static String generate(String s) {
-        if (!isDigit(s)) {
-            return "Please input a number";
-        }
+    public static String generate(int str) {
+        String s = "" + str;
         String newString = "";
         String front = "";
         int goal = Integer.parseInt(s);
@@ -194,12 +196,17 @@ public class pervasiveParentheses {
             } else if (key.equals("e")) {
                 System.out.println(evaluate(expression));
             } else if (key.equals("g")) {
-                System.out.println(generate(expression));
+                if (isDigit(expression))
+                    System.out.println(generate(Integer.parseInt(expression)));
+                else
+                    System.out.println("Not an integer");
             } else if (key.equals("s")) {
-                expression = evaluate(expression);
-                System.out.println(generate(expression));
+                System.out.println(generate(evaluate(expression)));
             } else if (key.equals("t")) { // secret testing option
-                System.out.println("  " + evaluate(generate(expression)));
+                if (isDigit(expression))
+                    System.out.println("  " + evaluate(generate(Integer.parseInt(expression))));
+                else
+                    System.out.println("Not an integer");
             } else {
                 System.out.println("Please input a valid command");
             }
