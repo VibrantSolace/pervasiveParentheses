@@ -1,43 +1,288 @@
+import java.util.Scanner;
+
 public class pervasiveParentheses {
-    public static String findP(String s) {
-        int index = s.indexOf(")");
-        int i = index;
-        String search = "";
-        if (i == -1 && s.indexOf("(") == -1) {
-            return s;
-        } else if (i == -1 && s.indexOf("(") != -1) {
-            return "error";
-        } else {
+    public static String loop(String s) {
+        while (true) {
+            int index = s.indexOf(")");
+            if (index == -1) { // safety measures
+                if (s.indexOf("(") != -1) {
+                    System.out.println("No matching closed parentheses for your open parentheses");
+                    return "-1";
+                } else
+                    return s;
+            }
+            int i = index; // variable to tick down from index to search String
+            String search = ""; // variable to search String one character at a time
             while (!search.equals("(")) {
                 search = s.substring(i - 1, i);
                 i -= 1;
+                if (i == 0 && !search.equals("(")) {
+                    System.out.println("No matching open parentheses for your closed parentheses");
+                    return "-1";
+                }
             }
-            return s.substring(i+1, index);
+            int num = Integer.parseInt(s.substring(i + 1, index)) * 2; // doubles what's inside parentheses
+            // * this next section of code will search for the Strings
+            // before and after the parentheses in order to add them together
+            // and replace them back in the String */
+            String beforeP = ""; // placeholder variable because it's flipped
+            String before = ""; // String before parentheses
+            search = "";
+            while (!search.equals("(")) {
+                beforeP += search;
+                if (i == 0) {
+                    i--;
+                    break;
+                }
+                search = s.substring(i - 1, i);
+                i -= 1;
+            }
+
+            int len = beforeP.length();
+            while (len != 0) { // reverses the beforeP String
+                before += beforeP.substring(len - 1, len);
+                len -= 1;
+            }
+
+            String after = ""; // don't need a placeholder for this one
+            search = "";
+            while (!search.equals("(") && !search.equals(")")) {
+                after += search;
+                index += 1;
+                if (index == s.length()) {
+                    break;
+                }
+                search = s.substring(index, index + 1);
+            }
+
+            if (before.equals(""))
+                before = "0";
+            if (after.equals(""))
+                after = "0";
+
+            num += Integer.parseInt(before) + Integer.parseInt(after);
+            s = s.substring(0, i + 1) + String.valueOf(num) + s.substring(index, s.length());
         }
     }
 
-    public static String evalExpression (String ex) {
-        int i = 0;
-        int evaluated = 0;
-        while (i+1<ex.length()) {
-            try {
-                evaluated += Integer.parseInt(ex.substring(i,i+1));
-            } catch (Exception NumberFormatException) {
-                return "error";
+    public static boolean isDigit(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String addDigits(String s) {
+        int len = 0;
+        String first = "";
+        String next = "";
+        int added = 0;
+        int temp = 0;
+
+        while (len < s.length() - 1) {
+            first = s.substring(len, len + 1);
+            if (isDigit(first)) {
+                temp = len;
+                added = Integer.parseInt(first);
+                while (temp < s.length() - 1 && isDigit(s.substring(temp + 1, temp + 2))) {
+                    next = s.substring(temp + 1, temp + 2);
+                    added = added + Integer.parseInt(next);
+                    temp += 1;
+                }
+                String after = "";
+                if (temp + 1 == s.length())
+                    after = "";
+                else {
+                    after = s.substring(temp + 1);
+                }
+                s = (s.substring(0, len) + added + after);
+                len = temp;
             }
+            len += 1;
+        }
+        return s;
+    }
+
+    public static boolean validate(String s) {
+        return !(evaluate(s) == -1);
+    }
+
+    public static int evaluate(String s) {
+        int iter = 0;
+        String index = "";
+        while (iter != s.length()) {
+            index = s.substring(iter, iter + 1);
+            if (!isDigit(index) && !index.equals("(") && !index.equals(")")) {
+                return -1;
+            }
+            iter += 1;
+        }
+        s = addDigits(s);
+        int value = Integer.parseInt(loop(s));
+        return value;
+    }
+
+    public static String generate(int str) {
+        String s = "" + str;
+        String newString = "";
+        String front = "";
+        int goal = Integer.parseInt(s);
+        int currentNum = 0;
+
+        int i = 0;
+        int num = goal;
+        while (num >= 37) {
+            num /= 2;
             i += 1;
         }
-        return Integer.toString(evaluated);
+        currentNum += num * ((int) Math.pow(2, i));
+        while (num >= 9) {
+            newString += 9;
+            num -= 9;
+        }
+        if (num != 0)
+            newString += num;
+        while (i != 0) {
+            newString = "(" + newString + ")";
+            i -= 1;
+        }
+        while (currentNum != goal) {
+            num = goal - currentNum;
+            i = 0;
+            while (num >= 10) {
+                num /= 2;
+                i += 1;
+            }
+            currentNum += num * ((int) Math.pow(2, i));
+            if (i == 0)
+                front = "";
+            else
+                front = newString.substring(0, i);
+            newString = front + num + newString.substring(i);
+        }
+
+        return newString;
     }
+
+    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.print(findP("(123)"));
+        while (true) {
+            System.out.println(
+                    "Command guidebook:" +
+                            "\n * e to evaluate an expression" +
+                            "\n * g to generate an expression" +
+                            "\n * s to shorten an expression" +
+                            "\n * q quits the program" +
+                            "\n Example: g 15 generates an expression with value 15" +
+                            "\n Input a Command:");
+            String command = scanner.nextLine();
+            String key = "";
+            String expression = "";
+            if (command.substring(0, 1).equals("q")) {
+                System.out.println("Bye!");
+                break;
+            } else if (command.length() < 3) {
+                key = "LENGTH ERROR";
+            } else {
+                key = command.substring(0, 1);
+                expression = command.substring(2);
+            }
+
+            if (key.equals("LENGTH ERROR")) {
+                System.out.println("Please input a valid command");
+            } else if (key.equals("e")) {
+                System.out.println(evaluate(expression));
+            } else if (key.equals("g")) {
+                if (isDigit(expression))
+                    System.out.println(generate(Integer.parseInt(expression)));
+                else
+                    System.out.println("Not an integer");
+            } else if (key.equals("s")) {
+                System.out.println(generate(evaluate(expression)));
+            } else if (key.equals("t")) { // secret testing option
+                if (isDigit(expression))
+                    System.out.println("  " + evaluate(generate(Integer.parseInt(expression))));
+                else
+                    System.out.println("Not an integer");
+            } else {
+                System.out.println("Please input a valid command");
+            }
+            System.out.println("\n\n");
+        }
     }
 }
+public class Tests
+{
+    private static int totalRun = 0;
+    private static int totalPassed = 0;
 
+    public static void testValidate(String expr, boolean expected)
+    {
+        totalRun++;
+        boolean actual = PervasiveParentheses.validate(expr);
+        if (actual == expected)
+            totalPassed++;
+        else
+            System.out.println("Validate test failed, expr: " + expr + ", expected: " + expected + ", actual: " + actual);
+    }
 
+    public static void testEvaluate(String expression, String expected)
+    {
+        totalRun++;
+        String actual = PervasiveParentheses.evaluate(expression);
+        if (actual.equals(expected))
+            totalPassed++;
+        else
+            System.out.println("Evaluate test failed, expr: " + expression + ", expected: " + expected + ", actual: " + actual);
 
+    }
 
+    public static void testGenerate(int value, String expected) {
+        totalRun++;
+        String actual = PervasiveParentheses.generate(value);
+        if (actual.equals(expected))
+            totalPassed++;
+        else
+            System.out.println("Generate test failed, val: " + value + ", expected: " + expected + ", actual: " + actual);
 
+    }
 
+    public static void testConsistency(int value) {
+        // This first generates an expression with the given value,
+        // then evaluates that generated expression, then compares
+        // that with the original value.
+        totalRun++;
+        String exp = PervasiveParentheses.generate(value);
+        int actual = PervasiveParentheses.evaluate(exp);
+        if (actual == value)
+            totalPassed++;
+        else
+            System.out.println("Consistency test failed, value: " + value + ", generated: " + exp + ", evaluated: " + actual);
+    }
 
+    public static void main(String[] args)
+    {
+        // example validate tests with invalid expressions
+        testValidate("(0)(", false);
+        testValidate("(0))1((2)", false);
+        testValidate("1(x)", false);
+
+        // example validate tests with valid expressions
+        testValidate("", true);
+        testValidate("01234(5)6789", true);
+        testValidate("(12(34)56(78)9)0", true);
+
+        testEvaluate(null, null);
+
+        testGenerate(12408, "8((((7(((((996)))))))))");
+
+        // example consistency test, add moore
+        testConsistency(117);
+
+        System.out.println("Total tests run: " + totalRun);
+        System.out.println("Total tests passed: " + totalPassed);             
+    }
+}
