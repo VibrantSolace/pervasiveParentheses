@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class pervasiveParentheses {
-    public static String loop(String s) {
+    private static String loop(String s) {
         while (true) {
             int index = s.indexOf(")");
             if (index == -1) { // safety measures
@@ -65,7 +65,7 @@ public class pervasiveParentheses {
         }
     }
 
-    public static boolean isDigit(String s) {
+    private static boolean isDigit(String s) { // checks if input string is a digit
         try {
             Integer.parseInt(s);
             return true;
@@ -74,7 +74,7 @@ public class pervasiveParentheses {
         }
     }
 
-    public static String addDigits(String s) {
+    private static String addDigits(String s) { // adds consecutive digits for evaluate
         int len = 0;
         String first = "";
         String next = "";
@@ -105,11 +105,12 @@ public class pervasiveParentheses {
         return s;
     }
 
-    public static boolean validate(String s) {
+    public static boolean validate(String s) { // the most scuffed evaluate you will ever see
         return !(evaluate(s) == -1);
     }
 
     public static int evaluate(String s) {
+        s += "0"; // just a fix for empty strings ;-;
         int iter = 0;
         String index = "";
         while (iter != s.length()) {
@@ -124,7 +125,7 @@ public class pervasiveParentheses {
         return value;
     }
 
-    public static String generate(int str) {
+    public static String generate(int str) { // generation code
         String s = "" + str;
         String newString = "";
         String front = "";
@@ -168,7 +169,7 @@ public class pervasiveParentheses {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // main loop
         while (true) {
             System.out.println(
                     "Command guidebook:" +
@@ -212,77 +213,5 @@ public class pervasiveParentheses {
             }
             System.out.println("\n\n");
         }
-    }
-}
-public class Tests
-{
-    private static int totalRun = 0;
-    private static int totalPassed = 0;
-
-    public static void testValidate(String expr, boolean expected)
-    {
-        totalRun++;
-        boolean actual = PervasiveParentheses.validate(expr);
-        if (actual == expected)
-            totalPassed++;
-        else
-            System.out.println("Validate test failed, expr: " + expr + ", expected: " + expected + ", actual: " + actual);
-    }
-
-    public static void testEvaluate(String expression, String expected)
-    {
-        totalRun++;
-        String actual = PervasiveParentheses.evaluate(expression);
-        if (actual.equals(expected))
-            totalPassed++;
-        else
-            System.out.println("Evaluate test failed, expr: " + expression + ", expected: " + expected + ", actual: " + actual);
-
-    }
-
-    public static void testGenerate(int value, String expected) {
-        totalRun++;
-        String actual = PervasiveParentheses.generate(value);
-        if (actual.equals(expected))
-            totalPassed++;
-        else
-            System.out.println("Generate test failed, val: " + value + ", expected: " + expected + ", actual: " + actual);
-
-    }
-
-    public static void testConsistency(int value) {
-        // This first generates an expression with the given value,
-        // then evaluates that generated expression, then compares
-        // that with the original value.
-        totalRun++;
-        String exp = PervasiveParentheses.generate(value);
-        int actual = PervasiveParentheses.evaluate(exp);
-        if (actual == value)
-            totalPassed++;
-        else
-            System.out.println("Consistency test failed, value: " + value + ", generated: " + exp + ", evaluated: " + actual);
-    }
-
-    public static void main(String[] args)
-    {
-        // example validate tests with invalid expressions
-        testValidate("(0)(", false);
-        testValidate("(0))1((2)", false);
-        testValidate("1(x)", false);
-
-        // example validate tests with valid expressions
-        testValidate("", true);
-        testValidate("01234(5)6789", true);
-        testValidate("(12(34)56(78)9)0", true);
-
-        testEvaluate(null, null);
-
-        testGenerate(12408, "8((((7(((((996)))))))))");
-
-        // example consistency test, add moore
-        testConsistency(117);
-
-        System.out.println("Total tests run: " + totalRun);
-        System.out.println("Total tests passed: " + totalPassed);             
     }
 }
