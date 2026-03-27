@@ -61,7 +61,7 @@ public class Tests {
 
         // testEvaluate(null, null); //* Note for Logan - if you even see this, evaluate
         // only
-        // returns integers, and cannot return null, so null only returns -1
+        // returns integers, and cannot return null, so null only returns -1 */
 
         testGenerate(12408, "8((((7(((((996)))))))))");
 
