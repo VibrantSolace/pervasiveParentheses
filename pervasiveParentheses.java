@@ -1,18 +1,22 @@
 import java.util.Scanner;
 
 public class pervasiveParentheses {
+    // main loop of evaluate
     private static String loop(String s) {
         while (true) {
             int index = s.indexOf(")");
-            if (index == -1) { // safety measures
+            // safety measures
+            if (index == -1) {
                 if (s.indexOf("(") != -1) {
                     System.out.println("No matching closed parentheses for your open parentheses");
                     return "-1";
                 } else
                     return s;
             }
-            int i = index; // variable to tick down from index to search String
-            String search = ""; // variable to search String one character at a time
+            // variable to tick down from index to search String
+            int i = index;
+            // variable to search String one character at a time
+            String search = "";
             while (!search.equals("(")) {
                 search = s.substring(i - 1, i);
                 i -= 1;
@@ -21,7 +25,8 @@ public class pervasiveParentheses {
                     return "-1";
                 }
             }
-            int num = Integer.parseInt(s.substring(i + 1, index)) * 2; // doubles what's inside parentheses
+            // doubles what's inside parentheses
+            int num = Integer.parseInt(s.substring(i + 1, index)) * 2;
             // * this next section of code will search for the Strings
             // before and after the parentheses in order to add them together
             // and replace them back in the String */
@@ -39,12 +44,13 @@ public class pervasiveParentheses {
             }
 
             int len = beforeP.length();
-            while (len != 0) { // reverses the beforeP String
+            // reverses the beforeP String
+            while (len != 0) {
                 before += beforeP.substring(len - 1, len);
                 len -= 1;
             }
 
-            String after = ""; // don't need a placeholder for this one
+            String after = "";
             search = "";
             while (!search.equals("(") && !search.equals(")")) {
                 after += search;
@@ -60,12 +66,15 @@ public class pervasiveParentheses {
             if (after.equals(""))
                 after = "0";
 
+            // * make String s now a version where the innermost parens
+            // are evaluated and added to the ones around it to run the loop again */
             num += Integer.parseInt(before) + Integer.parseInt(after);
             s = s.substring(0, i + 1) + String.valueOf(num) + s.substring(index, s.length());
         }
     }
 
-    private static boolean isDigit(String s) { // checks if input string is a digit
+    // checks if input string is a digit
+    private static boolean isDigit(String s) {
         try {
             Integer.parseInt(s);
             return true;
@@ -74,18 +83,26 @@ public class pervasiveParentheses {
         }
     }
 
-    private static String addDigits(String s) { // adds consecutive digits for evaluate
+    /**
+     * addDigits combines consecutive digits before the main loop of evaluate runs
+     * so that each number is actually what it looks like, rather than just x + y +
+     * z.
+     */
+    private static String addDigits(String s) {
         int len = 0;
         String first = "";
         String next = "";
         int added = 0;
         int temp = 0;
 
+        // runs through every character except for the last
         while (len < s.length() - 1) {
             first = s.substring(len, len + 1);
+            // checks if it is a digit
             if (isDigit(first)) {
                 temp = len;
                 added = Integer.parseInt(first);
+                // then, if the next number is a digit as well, add it to the previous one
                 while (temp < s.length() - 1 && isDigit(s.substring(temp + 1, temp + 2))) {
                     next = s.substring(temp + 1, temp + 2);
                     added = added + Integer.parseInt(next);
@@ -105,7 +122,8 @@ public class pervasiveParentheses {
         return s;
     }
 
-    public static boolean validate(String s) { // the most scuffed evaluate you will ever see
+    /** the most scuffed validate you will ever see */
+    public static boolean validate(String s) {
         return !(evaluate(s) == -1);
     }
 
@@ -114,18 +132,22 @@ public class pervasiveParentheses {
         int iter = 0;
         String index = "";
         while (iter != s.length()) {
+            // * really quick validate that just checks if all the characters are
+            // useable in the language (parens and digits) */
             index = s.substring(iter, iter + 1);
             if (!isDigit(index) && !index.equals("(") && !index.equals(")")) {
                 return -1;
             }
             iter += 1;
         }
+        // runs the preliminary loop to add digits together
         s = addDigits(s);
+        // runs the main loop to evaluate parens
         int value = Integer.parseInt(loop(s));
         return value;
     }
 
-    public static String generate(int str) { // generation code
+    public static String generate(int str) {
         String s = "" + str;
         String newString = "";
         String front = "";
@@ -134,21 +156,27 @@ public class pervasiveParentheses {
 
         int i = 0;
         int num = goal;
+        // four digits in a row is the most efficient, so it adds parens up until "9999"
         while (num >= 37) {
             num /= 2;
             i += 1;
         }
+        // count how big your current number is
         currentNum += num * ((int) Math.pow(2, i));
+        // adds 9 to the string because 9999 :)
         while (num >= 9) {
             newString += 9;
             num -= 9;
         }
+        // adds that final little number in case of 9995 or something
         if (num != 0)
             newString += num;
+        // adds parens for each time you divided by 2
         while (i != 0) {
             newString = "(" + newString + ")";
             i -= 1;
         }
+        // repeats but goes until it finds one digit and slots it within the existing parens
         while (currentNum != goal) {
             num = goal - currentNum;
             i = 0;
