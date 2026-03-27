@@ -5,9 +5,11 @@ public class Tests {
     public static void testValidate(String expr, boolean expected) {
         totalRun++;
         boolean actual = pervasiveParentheses.validate(expr);
-        if (actual == expected)
+        if (actual == expected) {
+            System.out.println(
+                    "Validate test succeeded, expr: " + expr + ", expected: " + expected + ", actual: " + actual);
             totalPassed++;
-        else
+        } else
             System.out
                     .println("Validate test failed, expr: " + expr + ", expected: " + expected + ", actual: " + actual);
     }
@@ -15,20 +17,24 @@ public class Tests {
     public static void testEvaluate(String expression, int expected) {
         totalRun++;
         int actual = pervasiveParentheses.evaluate(expression);
-        if (actual == expected)
+        if (actual == expected) {
+            System.out.println(
+                    "Evaluate test succeeded, expr: " + expression + ", expected: " + expected + ", actual: " + actual);
             totalPassed++;
-        else
+        } else
             System.out.println(
                     "Evaluate test failed, expr: " + expression + ", expected: " + expected + ", actual: " + actual);
-
     }
 
     public static void testGenerate(int value, String expected) {
         totalRun++;
         String actual = pervasiveParentheses.generate(value);
-        if (actual.equals(expected))
+        if (actual.equals(expected)) {
+            System.out
+                    .println("Generate test succeeded, val: " + value + ", expected: " + expected + ", actual: "
+                            + actual);
             totalPassed++;
-        else
+        } else
             System.out
                     .println("Generate test failed, val: " + value + ", expected: " + expected + ", actual: " + actual);
 
@@ -41,9 +47,11 @@ public class Tests {
         totalRun++;
         String exp = pervasiveParentheses.generate(value);
         int actual = pervasiveParentheses.evaluate(exp);
-        if (actual == value)
+        if (actual == value) {
+            System.out.println(
+                    "Consistency test succeeded, value: " + value + ", generated: " + exp + ", evaluated: " + actual);
             totalPassed++;
-        else
+        } else
             System.out.println(
                     "Consistency test failed, value: " + value + ", generated: " + exp + ", evaluated: " + actual);
     }
