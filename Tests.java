@@ -59,14 +59,19 @@ public class Tests {
         testValidate("01234(5)6789", true);
         testValidate("(12(34)56(78)9)0", true);
 
-        // testEvaluate(null, null); //* Note for Logan - if you even see this, evaluate
-        // only
-        // returns integers, and cannot return null, so null only returns -1 */
+        testEvaluate(null, -1);
 
         testGenerate(12408, "8((((7(((((996)))))))))");
 
         // example consistency test, add moore
-        testConsistency(117);
+        testConsistency(10235);
+        testConsistency(12344);
+        testConsistency(6234);
+        testConsistency(123456789);
+        testConsistency(5673);
+        testConsistency(98739);
+        for (int i = 0; i < 5000; i += (int) (Math.random() * 10) + 1)
+            testConsistency(i);
 
         System.out.println("Total tests run: " + totalRun);
         System.out.println("Total tests passed: " + totalPassed);
